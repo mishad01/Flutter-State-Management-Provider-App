@@ -1,5 +1,7 @@
 import 'package:expense_tracker_app/model/transaction.dart';
+import 'package:expense_tracker_app/provider/transaction_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({super.key});
@@ -44,6 +46,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
 
     // TODO: Add transaction to provider
+    Provider.of<TransactionProvider>(
+      context,
+      listen: false,
+    ).addTransaction(title, amount, DateTime.now(), _isIncome);
 
     print('Transaction added: ${transaction.title} - \$${transaction.amount}');
 
@@ -145,6 +151,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             // Add Transaction Button
             ElevatedButton(
               onPressed: _addTransaction,
+              //onPressed: () {}, //
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: _isIncome ? Colors.green : Colors.red,
