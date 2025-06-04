@@ -1,4 +1,5 @@
 import 'package:dynamic_voting_app/provider/voting_provider.dart';
+import 'package:dynamic_voting_app/view/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,9 +25,34 @@ class VotingScreen extends StatelessWidget {
               final isVote = votingProvider.selectedCandidateId == candidate.id;
               return ListTile(
                 title: Text(candidate.name),
+                trailing: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isVote == true ? Colors.green : Colors.white),
+                    onPressed: () {
+                      votingProvider.vote(candidate.id);
+                    },
+                    child: Text(
+                      "Vote",
+                      style: TextStyle(
+                          color: isVote == true ? Colors.white : Colors.black),
+                    )),
               );
             },
-          ))
+          )),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ResultScreen(),
+                ),
+              );
+            },
+            child: Text("View Result"),
+          ),
+          Spacer(),
+          Spacer(),
         ],
       ),
     );
