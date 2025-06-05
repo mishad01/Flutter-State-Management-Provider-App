@@ -142,6 +142,119 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  AppBar appBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Iconsax.cloud_sunny),
+              SizedBox(width: 10),
+              Text("Good Morning"),
+            ],
+          ),
+          Text(
+            "Alena Sabyan",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Iconsax.shopping_cart),
+        ),
+      ],
+    );
+  }
+
+  Column slider() {
+    return Column(
+      children: [
+        CarouselSlider(
+          options: CarouselOptions(
+            height: 172,
+            autoPlay: true,
+            enlargeCenterPage: true,
+            viewportFraction: 0.9,
+            onPageChanged: (index, reason) {
+              setState(() {
+                currentSlide = index;
+              });
+            },
+          ),
+          items: carouselImages.map((url) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.network(
+                "https://img.freepik.com/free-psd/delicious-food-banner-template_23-2148985990.jpg?semt=ais_hybrid&w=740",
+                fit: BoxFit.fill,
+                width: double.infinity,
+              ),
+            );
+          }).toList(),
+        ),
+
+        // Carousel indicators
+        SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            carouselImages.length,
+            (index) => Container(
+              margin: EdgeInsets.symmetric(horizontal: 4),
+              width: currentSlide == index ? 20 : 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: currentSlide == index ? Colors.blue : Colors.grey[300],
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  SingleChildScrollView categoryOptionCard() {
+    bool isSelected = true;
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: categories.map((category) {
+          return Container(
+            margin: EdgeInsets.only(right: 12),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppColors.themeColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  category['icon'],
+                  size: 18,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  category['name'],
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   SizedBox recipeCard() {
     return SizedBox(
       height: 180,
@@ -207,118 +320,6 @@ class _HomeScreenState extends State<HomeScreen> {
           print('Tapped index: $index');
         },
       ),
-    );
-  }
-
-  SingleChildScrollView categoryOptionCard() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: categories.map((category) {
-          return Container(
-            margin: EdgeInsets.only(right: 12),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: AppColors.themeColor,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  category['icon'],
-                  size: 18,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 8),
-                Text(
-                  category['name'],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Iconsax.cloud_sunny),
-              SizedBox(width: 10),
-              Text("Good Morning"),
-            ],
-          ),
-          Text(
-            "Alena Sabyan",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Iconsax.shopping_cart),
-        ),
-      ],
-    );
-  }
-
-  Column slider() {
-    return Column(
-      children: [
-        CarouselSlider(
-          options: CarouselOptions(
-            height: 172,
-            autoPlay: true,
-            enlargeCenterPage: true,
-            viewportFraction: 0.9,
-            onPageChanged: (index, reason) {
-              setState(() {
-                currentSlide = index;
-              });
-            },
-          ),
-          items: carouselImages.map((url) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.network(
-                url,
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
-            );
-          }).toList(),
-        ),
-
-        // Carousel indicators
-        SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            carouselImages.length,
-            (index) => Container(
-              margin: EdgeInsets.symmetric(horizontal: 4),
-              width: currentSlide == index ? 20 : 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: currentSlide == index ? Colors.blue : Colors.grey[300],
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
