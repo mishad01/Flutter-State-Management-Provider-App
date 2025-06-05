@@ -28,7 +28,7 @@ class HabitProvider with ChangeNotifier {
     final index = _habits.indexWhere(
       (habit) => habit.id == id,
     );
-    if (index != 1) {
+    if (index != -1) {
       _habits[index].isCompleted = !_habits[index].isCompleted;
       notifyListeners();
     }

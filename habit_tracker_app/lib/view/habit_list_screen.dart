@@ -19,12 +19,15 @@ class _HabitListScreenState extends State<HabitListScreen> {
       floatingActionButton: buildFloatingActionButton(context, habitProvider),
       body: Column(
         children: [
-          Text("Daily Progress: habit completed"),
+          Text(
+              "Daily Progress:${habitProvider.completeHabits}/ ${habitProvider.totalHabit} habit completed"),
           SizedBox(height: 8),
-          LinearProgressIndicator(value: 0.5),
+          LinearProgressIndicator(value: habitProvider.competitionPercentage),
           SizedBox(height: 8),
           Text(
-              "Completion Percentage : ${habitProvider.competitionPercentage.toString()}%"),
+            "Completion Percentage : ${habitProvider.competitionPercentage.toString()}%",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
           Expanded(
               child: ListView.builder(
             itemCount: habit.length,
