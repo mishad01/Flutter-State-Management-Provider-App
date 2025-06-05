@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_app_provider_supabase/view/home_screen/home_screen.dart';
+import 'package:sizer/sizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -18,27 +20,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Recipe App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Recipe App Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  final String title;
-
-  const MyHomePage({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: const Center(child: Text('Welcome to Recipe App!')),
+    return Sizer(
+      builder: (context, orientation, screenType) {
+        return MaterialApp(home: HomeScreen());
+      },
     );
   }
 }
