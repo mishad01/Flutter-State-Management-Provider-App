@@ -71,4 +71,21 @@ class ProductListProvider with ChangeNotifier {
     notifyListeners();
     return isSuccess;
   }
+
+  Future<bool> updateProduct(ProductModel product, String id) async {
+    apiInProgress = true;
+    notifyListeners();
+    NetworkResponse response = await NetworkCaller.postRequest(
+        Urls.updateProduct(id), product.toJson());
+
+    if (response.isSuccess) {
+      isSuccess = true;
+    } else {
+      isSuccess = false;
+    }
+
+    apiInProgress = false;
+    notifyListeners();
+    return isSuccess;
+  }
 }
