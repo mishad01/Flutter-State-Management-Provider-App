@@ -33,4 +33,42 @@ class ProductListProvider with ChangeNotifier {
     notifyListeners();
     return isSuccess;
   }
+
+  Future<bool> addProductList(ProductModel product) async {
+    apiInProgress = true;
+    notifyListeners();
+
+    NetworkResponse response = await NetworkCaller.postRequest(
+      Urls.createProduct,
+      product.toJson(),
+    );
+
+    if (response.isSuccess) {
+      isSuccess = true;
+    } else {
+      isSuccess = false;
+    }
+    apiInProgress = false;
+    notifyListeners();
+    return isSuccess;
+  }
+
+  Future<bool> deleteProduct(ProductModel product, String id) async {
+    apiInProgress = true;
+    notifyListeners();
+
+    NetworkResponse response = await NetworkCaller.getRequest(
+      Urls.deleteProduct(id),
+    );
+
+    if (response.isSuccess) {
+      isSuccess = true;
+      _productList.removeWhere((element) => element.sId == id);
+    } else {
+      isSuccess = false;
+    }
+    apiInProgress = false;
+    notifyListeners();
+    return isSuccess;
+  }
 }
