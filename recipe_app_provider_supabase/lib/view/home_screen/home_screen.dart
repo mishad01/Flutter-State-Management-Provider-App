@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:recipe_app_provider_supabase/utils/app_colors.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_app_provider_supabase/core/utils/app_colors.dart';
+import 'package:recipe_app_provider_supabase/provider/meal_category_provider.dart';
 import 'package:recipe_app_provider_supabase/view/home_screen/widgets/recipe_card.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,14 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'https://via.placeholder.com/300x150/FF6B6B/FFFFFF?text=Delicious+Recipes',
     'https://via.placeholder.com/300x150/4ECDC4/FFFFFF?text=Quick+Meals',
     'https://via.placeholder.com/300x150/45B7D1/FFFFFF?text=Healthy+Food',
-  ];
-
-  final List<Map<String, dynamic>> categories = [
-    {'name': 'Breakfast', 'icon': Iconsax.coffee},
-    {'name': 'Lunch', 'icon': Iconsax.cake},
-    {'name': 'Dinner', 'icon': Iconsax.cup},
-    {'name': 'Snacks', 'icon': Iconsax.emoji_happy},
-    {'name': 'Dessert', 'icon': Iconsax.heart},
   ];
 
   final List<Map<String, dynamic>> quickRecipes = [
@@ -57,7 +51,17 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<MealCategoryProvider>(context, listen: false).getCategory();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final categoryProvider = Provider.of<MealCategoryProvider>(context);
+    final categories = categoryProvider.categoryList;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
@@ -110,8 +114,52 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 3.h),
             // Categories option row wise rounded small
-            categoryOptionCard(),
-            SizedBox(height: 3.h),
+            /*categoryOptionCard(),*/
+            SizedBox(
+                height: 42, // adjust height as needed
+                child: ListView.builder(
+                  scrollDirection:
+                      Axis.horizontal, // horizontal better for categories
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+
+                    return Container(
+                      margin: EdgeInsets.only(right: 12),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.themeColor,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // If you want to show the thumbnail image:
+                          if (category.strCategoryThumb != null)
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                category.strCategoryThumb!,
+                                width: 24,
+                                height: 24,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          SizedBox(width: 8),
+                          Text(
+                            category.strCategory ?? '',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                )),
+            /*SizedBox(height: 3.h),
             // Quick and Easy text
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 3.h),
             // Cards with image, title, calories and total time
-            recipeCard(),
+            recipeCard(),*/
           ],
         ),
       ),
@@ -218,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  SingleChildScrollView categoryOptionCard() {
+  /*SingleChildScrollView categoryOptionCard() {
     bool isSelected = true;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -253,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }).toList(),
       ),
     );
-  }
+  }*/
 
   SizedBox recipeCard() {
     return SizedBox(

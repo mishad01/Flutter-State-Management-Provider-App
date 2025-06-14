@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_app_provider_supabase/provider/meal_category_provider.dart';
 import 'package:recipe_app_provider_supabase/view/home_screen/home_screen.dart';
 import 'package:sizer/sizer.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
+/*
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -13,6 +15,15 @@ void main() async {
   );
 
   runApp(MyApp());
+}
+*/
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => MealCategoryProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
