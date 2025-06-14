@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 class DataBaseHelper {
   static final DataBaseHelper instance = DataBaseHelper._init();
   static Database? _database;
+
   DataBaseHelper._init();
 
   Future<Database> get database async {
@@ -24,18 +25,18 @@ class DataBaseHelper {
   }
 
   Future<void> _createDB(Database db, int version) async {
-    db.execute('''
-    Create TABLE tasks(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      isCompleted INTEGER NOT NULL DEFAULT 0,
-    )
+    await db.execute('''
+      CREATE TABLE tasks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        isCompleted INTEGER NOT NULL DEFAULT 0
+      )
     ''');
   }
 
   Future<int> insertTask(Map<String, dynamic> task) async {
     final db = await instance.database;
-    return db.insert('tasks', task);
+    return await db.insert('tasks', task);
   }
 
   Future<List<Map<String, dynamic>>> getTask() async {
