@@ -11,6 +11,9 @@ class RestApiCrudApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
+          inputDecorationTheme: InputDecorationTheme(
+            border: OutlineInputBorder(),
+          ),
         ),
         home: HomePage());
   }
