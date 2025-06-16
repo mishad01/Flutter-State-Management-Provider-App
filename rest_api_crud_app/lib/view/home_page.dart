@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rest_api_crud_app/model/product_model.dart';
 import 'package:rest_api_crud_app/utils/custom_app_bar.dart';
+import 'package:rest_api_crud_app/utils/navigation_utils.dart';
 import 'package:rest_api_crud_app/view/update_view.dart';
 import 'package:rest_api_crud_app/view_model/add_product_view_model.dart';
 import 'package:rest_api_crud_app/view_model/delete_product_view_model.dart';
@@ -103,7 +104,6 @@ class _HomePageState extends State<HomePage> {
         context,
         "Rest Api Crud App",
         icon: Icons.add,
-        view: UpdateView(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -154,7 +154,19 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              NavigationUtils.pushTo(
+                                context,
+                                UpdateView(
+                                    sId: product.sId!,
+                                    productName: product.productName!,
+                                    productCode: product.productCode!,
+                                    img: product.img!,
+                                    unitPrice: product.unitPrice!,
+                                    qty: product.qty!,
+                                    totalPrice: product.totalPrice!),
+                              );
+                            },
                             icon: Icon(Icons.edit),
                           )
                         ],
