@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rest_api_crud_app/model/product_model.dart';
+import 'package:rest_api_crud_app/model/rest_api_crud/product_model.dart';
 import 'package:rest_api_crud_app/utils/custom_app_bar.dart';
 import 'package:rest_api_crud_app/utils/navigation_utils.dart';
-import 'package:rest_api_crud_app/view/update_view.dart';
-import 'package:rest_api_crud_app/view_model/add_product_view_model.dart';
-import 'package:rest_api_crud_app/view_model/delete_product_view_model.dart';
-import 'package:rest_api_crud_app/view_model/get_product_view_model.dart';
+import 'package:rest_api_crud_app/view/rest_api_crud/update_view.dart';
+import 'package:rest_api_crud_app/view_model/rest_api_crud/add_product_view_model.dart';
+import 'package:rest_api_crud_app/view_model/rest_api_crud/delete_product_view_model.dart';
+import 'package:rest_api_crud_app/view_model/rest_api_crud/get_product_view_model.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class RestApiHomePage extends StatefulWidget {
+  const RestApiHomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<RestApiHomePage> createState() => _RestApiHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _RestApiHomePageState extends State<RestApiHomePage> {
   final titleController = TextEditingController();
   @override
   void initState() {
@@ -24,7 +24,8 @@ class _HomePageState extends State<HomePage> {
     Future.microtask(
       () {
         if (!mounted) return;
-        Provider.of<GetProductViewModel>(context, listen: false).getProduct();
+        Provider.of<GetProductViewModel>(context, listen: false)
+            .getProductOnce();
       },
     );
   }
@@ -135,51 +136,58 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             SizedBox(height: 10),
-            Visibility(
-              visible: !getProductProvider.inProgress,
-              replacement: Center(child: CircularProgressIndicator()),
-              child: Expanded(
-                child: ListView.builder(
-                  itemCount: productLists.length,
-                  itemBuilder: (context, index) {
-                    final product = productLists[index];
-                    return ListTile(
-                      title: Text(product.productName!),
-                      subtitle: Text(product.createdDate!),
-                      trailing: Wrap(
-                        children: [
-                          Visibility(
-                            visible: !(deleteProductProvider.inProgress &&
-                                deleteProductProvider.deletingId ==
-                                    product.sId),
-                            replacement: CircularProgressIndicator(),
-                            child: IconButton(
-                              onPressed: () {
-                                deleteProduct(product.sId!);
-                              },
-                              icon: Icon(Icons.delete),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              NavigationUtils.pushTo(
-                                context,
-                                UpdateView(
-                                    sId: product.sId!,
-                                    productName: product.productName!,
-                                    productCode: product.productCode!,
-                                    img: product.img!,
-                                    unitPrice: product.unitPrice!,
-                                    qty: product.qty!,
-                                    totalPrice: product.totalPrice!),
-                              );
-                            },
-                            icon: Icon(Icons.edit),
-                          )
-                        ],
-                      ),
-                    );
+            Expanded(
+              child: Visibility(
+                visible: !getProductProvider.inProgress,
+                replacement: Center(child: CircularProgressIndicator()),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    await Provider.of<GetProductViewModel>(context,
+                            listen: false)
+                        .getProduct();
                   },
+                  child: ListView.builder(
+                    itemCount: productLists.length,
+                    itemBuilder: (context, index) {
+                      final product = productLists[index];
+                      return ListTile(
+                        title: Text(product.productName!),
+                        subtitle: Text(product.createdDate!),
+                        trailing: Wrap(
+                          children: [
+                            Visibility(
+                              visible: !(deleteProductProvider.inProgress &&
+                                  deleteProductProvider.deletingId ==
+                                      product.sId),
+                              replacement: CircularProgressIndicator(),
+                              child: IconButton(
+                                onPressed: () {
+                                  deleteProduct(product.sId!);
+                                },
+                                icon: Icon(Icons.delete),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                NavigationUtils.pushTo(
+                                  context,
+                                  UpdateView(
+                                      sId: product.sId!,
+                                      productName: product.productName!,
+                                      productCode: product.productCode!,
+                                      img: product.img!,
+                                      unitPrice: product.unitPrice!,
+                                      qty: product.qty!,
+                                      totalPrice: product.totalPrice!),
+                                );
+                              },
+                              icon: Icon(Icons.edit),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             )

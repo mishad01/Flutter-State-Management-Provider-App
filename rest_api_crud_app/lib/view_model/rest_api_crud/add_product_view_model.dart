@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rest_api_crud_app/data/network_caller.dart';
 import 'package:rest_api_crud_app/data/network_response.dart';
-import 'package:rest_api_crud_app/model/product_model.dart';
+import 'package:rest_api_crud_app/model/rest_api_crud/product_model.dart';
 import 'package:rest_api_crud_app/utils/urls.dart';
 
 class AddProductViewModel with ChangeNotifier {

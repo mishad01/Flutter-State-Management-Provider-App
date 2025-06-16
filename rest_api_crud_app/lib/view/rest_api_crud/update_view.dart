@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rest_api_crud_app/model/product_model.dart';
+import 'package:rest_api_crud_app/model/rest_api_crud/product_model.dart';
 import 'package:rest_api_crud_app/utils/custom_app_bar.dart';
 import 'package:rest_api_crud_app/utils/custom_text_field.dart';
-import 'package:rest_api_crud_app/view_model/get_product_view_model.dart';
-import 'package:rest_api_crud_app/view_model/update_product_view_model.dart';
+import 'package:rest_api_crud_app/view_model/rest_api_crud/get_product_view_model.dart';
+import 'package:rest_api_crud_app/view_model/rest_api_crud/update_product_view_model.dart';
 
 class UpdateView extends StatefulWidget {
   const UpdateView({

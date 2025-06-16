@@ -1,4 +1,4 @@
-import 'package:rest_api_crud_app/model/product_model.dart';
+import 'package:rest_api_crud_app/model/rest_api_crud/product_model.dart';
 
 class ProductListModel {
   String? status;
