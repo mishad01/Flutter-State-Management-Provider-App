@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     Future.microtask(
       () {
+        if (!mounted) return;
         Provider.of<GetProductViewModel>(context, listen: false).getProduct();
       },
     );
@@ -41,10 +42,13 @@ class _HomePageState extends State<HomePage> {
     bool isAdded =
         await Provider.of<AddProductViewModel>(context, listen: false)
             .addProduct(product);
+    if (!mounted) return;
+
     if (isAdded) {
       titleController.clear();
       await Provider.of<GetProductViewModel>(context, listen: false)
           .getProduct();
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -71,8 +75,10 @@ class _HomePageState extends State<HomePage> {
         await Provider.of<DeleteProductViewModel>(context, listen: false)
             .deleteProduct(id);
     if (isDeleted) {
+      if (!mounted) return;
       await Provider.of<GetProductViewModel>(context, listen: false)
           .getProduct();
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -83,6 +89,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     } else {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

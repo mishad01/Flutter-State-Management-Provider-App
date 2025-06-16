@@ -30,15 +30,15 @@ class ProductModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['ProductName'] = this.productName;
-    data['ProductCode'] = this.productCode;
-    data['Img'] = this.img;
-    data['UnitPrice'] = this.unitPrice;
-    data['Qty'] = this.qty;
-    data['TotalPrice'] = this.totalPrice;
-    data['CreatedDate'] = this.createdDate;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['ProductName'] = productName;
+    data['ProductCode'] = productCode;
+    data['Img'] = img;
+    data['UnitPrice'] = unitPrice;
+    data['Qty'] = qty;
+    data['TotalPrice'] = totalPrice;
+    data['CreatedDate'] = createdDate;
     return data;
   }
 }
