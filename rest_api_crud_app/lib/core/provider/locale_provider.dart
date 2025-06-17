@@ -20,4 +20,8 @@ flutter:
 
 l10n:
   arb-dir: lib/l10n
-  template-arb-file: app_en.arb*/
+  template-arb-file: app_en.arb
+
+  flutter gen-l10n
+
+  */
