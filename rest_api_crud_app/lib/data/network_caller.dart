@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:rest_api_crud_app/data/network_response.dart';
 
 class NetworkCaller {
-  static Future<NetworkResponse> getRequest(String url) async {
+  Future<NetworkResponse> getRequest(String url) async {
     try {
       Uri uri = Uri.parse(url);
       Response response = await get(uri);
@@ -28,7 +28,7 @@ class NetworkCaller {
     }
   }
 
-  static Future<NetworkResponse> postRequest(
+  Future<NetworkResponse> postRequest(
       String url, Map<String, dynamic> body) async {
     try {
       Uri uri = Uri.parse(url);

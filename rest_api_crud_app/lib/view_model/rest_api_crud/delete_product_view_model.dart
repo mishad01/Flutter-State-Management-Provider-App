@@ -4,6 +4,8 @@ import 'package:rest_api_crud_app/data/network_response.dart';
 import 'package:rest_api_crud_app/utils/urls.dart';
 
 class DeleteProductViewModel with ChangeNotifier {
+  NetworkCaller _networkCaller = NetworkCaller();
+  DeleteProductViewModel(this._networkCaller);
   bool _inProgress = false;
   bool _isSuccess = false;
   String _deletingId = "";
@@ -17,7 +19,7 @@ class DeleteProductViewModel with ChangeNotifier {
     _deletingId = id;
     notifyListeners();
     NetworkResponse response =
-        await NetworkCaller.getRequest(Urls.deleteProduct(id));
+        await _networkCaller.getRequest(Urls.deleteProduct(id));
     if (response.isSuccess) {
       _isSuccess = true;
     } else {

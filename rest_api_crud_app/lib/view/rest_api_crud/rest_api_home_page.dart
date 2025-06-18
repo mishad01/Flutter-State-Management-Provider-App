@@ -17,17 +17,16 @@ class RestApiHomePage extends StatefulWidget {
 
 class _RestApiHomePageState extends State<RestApiHomePage> {
   final titleController = TextEditingController();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Future.microtask(
-      () {
-        if (!mounted) return;
-        Provider.of<GetProductViewModel>(context, listen: false)
-            .getProductOnce();
-      },
-    );
+
+    // ✅ Safe way to call ViewModel in initState:
+    Future.microtask(() {
+      if (!mounted) return;
+      context.read<GetProductViewModel>().getProductOnce();
+    });
   }
 
   void addProduct(String title) async {
@@ -40,31 +39,27 @@ class _RestApiHomePageState extends State<RestApiHomePage> {
       unitPrice: "100",
       createdDate: DateTime.now().toString(),
     );
+
     bool isAdded =
-        await Provider.of<AddProductViewModel>(context, listen: false)
-            .addProduct(product);
+        await context.read<AddProductViewModel>().addProduct(product);
     if (!mounted) return;
 
     if (isAdded) {
       titleController.clear();
-      await Provider.of<GetProductViewModel>(context, listen: false)
-          .getProduct();
+      await context.read<GetProductViewModel>().getProduct();
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            "Product Has Been Added",
-            style: TextStyle(color: Colors.black),
-          ),
+          content: Text("Product Has Been Added",
+              style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.greenAccent,
         ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            "Error Not added",
-          ),
+          content: Text("Error Not added"),
           backgroundColor: Colors.red,
         ),
       );
@@ -73,19 +68,17 @@ class _RestApiHomePageState extends State<RestApiHomePage> {
 
   void deleteProduct(String id) async {
     final isDeleted =
-        await Provider.of<DeleteProductViewModel>(context, listen: false)
-            .deleteProduct(id);
+        await context.read<DeleteProductViewModel>().deleteProduct(id);
+
     if (isDeleted) {
       if (!mounted) return;
-      await Provider.of<GetProductViewModel>(context, listen: false)
-          .getProduct();
+      await context.read<GetProductViewModel>().getProduct();
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            "Product Has Been Deleted",
-            style: TextStyle(color: Colors.black),
-          ),
+          content: Text("Product Has Been Deleted",
+              style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.greenAccent,
         ),
       );
@@ -93,9 +86,7 @@ class _RestApiHomePageState extends State<RestApiHomePage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            "Can't Delete",
-          ),
+          content: Text("Can't Delete"),
           backgroundColor: Colors.red,
         ),
       );
@@ -104,9 +95,10 @@ class _RestApiHomePageState extends State<RestApiHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final getProductProvider = Provider.of<GetProductViewModel>(context);
-    final deleteProductProvider = Provider.of<DeleteProductViewModel>(context);
+    final getProductProvider = context.watch<GetProductViewModel>();
+    final deleteProductProvider = context.watch<DeleteProductViewModel>();
     final productLists = getProductProvider.productList;
+
     return Scaffold(
       appBar: customAppBar(
         context,
@@ -142,27 +134,30 @@ class _RestApiHomePageState extends State<RestApiHomePage> {
                 replacement: Center(child: CircularProgressIndicator()),
                 child: RefreshIndicator(
                   onRefresh: () async {
-                    await Provider.of<GetProductViewModel>(context,
-                            listen: false)
-                        .getProduct();
+                    await context.read<GetProductViewModel>().getProduct();
                   },
                   child: ListView.builder(
                     itemCount: productLists.length,
                     itemBuilder: (context, index) {
                       final product = productLists[index];
                       return ListTile(
-                        title: Text(product.productName!),
-                        subtitle: Text(product.createdDate!),
+                        title: Text(product.productName ?? "No Name"),
+                        subtitle: Text(product.createdDate ?? "No Date"),
                         trailing: Wrap(
                           children: [
                             Visibility(
                               visible: !(deleteProductProvider.inProgress &&
                                   deleteProductProvider.deletingId ==
                                       product.sId),
-                              replacement: CircularProgressIndicator(),
+                              replacement: SizedBox(
+                                height: 24,
+                                width: 24,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              ),
                               child: IconButton(
                                 onPressed: () {
-                                  deleteProduct(product.sId!);
+                                  deleteProduct(product.sId ?? "");
                                 },
                                 icon: Icon(Icons.delete),
                               ),
@@ -172,17 +167,18 @@ class _RestApiHomePageState extends State<RestApiHomePage> {
                                 NavigationUtils.pushTo(
                                   context,
                                   UpdateView(
-                                      sId: product.sId!,
-                                      productName: product.productName!,
-                                      productCode: product.productCode!,
-                                      img: product.img!,
-                                      unitPrice: product.unitPrice!,
-                                      qty: product.qty!,
-                                      totalPrice: product.totalPrice!),
+                                    sId: product.sId ?? "",
+                                    productName: product.productName ?? "",
+                                    productCode: product.productCode ?? "",
+                                    img: product.img ?? "",
+                                    unitPrice: product.unitPrice ?? "",
+                                    qty: product.qty ?? "",
+                                    totalPrice: product.totalPrice ?? "",
+                                  ),
                                 );
                               },
                               icon: Icon(Icons.edit),
-                            )
+                            ),
                           ],
                         ),
                       );
@@ -190,7 +186,7 @@ class _RestApiHomePageState extends State<RestApiHomePage> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

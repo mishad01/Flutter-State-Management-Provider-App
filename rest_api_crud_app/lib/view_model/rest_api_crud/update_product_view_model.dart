@@ -5,6 +5,8 @@ import 'package:rest_api_crud_app/model/rest_api_crud/product_model.dart';
 import 'package:rest_api_crud_app/utils/urls.dart';
 
 class UpdateProductViewModel with ChangeNotifier {
+  NetworkCaller _networkCaller = NetworkCaller();
+  UpdateProductViewModel(this._networkCaller);
   bool _inProgress = false;
   bool _isSuccess = false;
 
@@ -14,7 +16,7 @@ class UpdateProductViewModel with ChangeNotifier {
   Future<bool> updateProduct(String id, ProductModel product) async {
     _inProgress = true;
     notifyListeners();
-    NetworkResponse response = await NetworkCaller.postRequest(
+    NetworkResponse response = await _networkCaller.postRequest(
         Urls.updateProduct(id), product.toJson());
     if (response.isSuccess) {
       _isSuccess = true;
